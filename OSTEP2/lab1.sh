@@ -1,3 +1,9 @@
+# Name: Ricardo Barbosa 
+# Date: 03/05/2020
+# Title: Lab 1 - Sampling a Shell Program
+# Description: This program requests parameters and calculates 
+#              the areas of a rectangle and a circle.
+
 #!/bin/bash
 echo Executing $0
 echo $(/bin/ls | wc -l) files
@@ -18,6 +24,7 @@ else
  echo "Check who logged in!"
  exit 1
 fi
+
 response="Yes"
 while [ $response != "No" ]
 do
@@ -25,12 +32,19 @@ do
  read height
  echo "Enter width of rectangle: "
  read width
- echo "Enter radius of a circle"
- read radius
- area_circle=`expr "$pi * ($radius * $radius)" | bc`
  area=`expr $height \* $width`
  echo "The area of the rectangle is $area"
- echo "The area of the circle is $area_circle"
- echo "Would you like to repeat for areas of shapes [Yes/No]?"
+ echo "Would you like to repeat for areas of rectangle [Yes/No]?"
  read response
+done
+
+response="Yes"
+while [ $response != "No" ]
+do
+echo "Enter the radius of a circle"
+read radius
+area_circle=`expr "$pi * ($radius * $radius)" | bc`
+area=`expr $height \* $width`
+echo "Would you like to repeat another area of a circle?"
+read response
 done
