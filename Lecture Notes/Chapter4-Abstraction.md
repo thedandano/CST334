@@ -62,7 +62,7 @@
 
 - At any given time, what parts of the machine are important to the execution of this program?
 
-- One obvious component of machine state that comprises a process is its _memory_.
+- One obvious component of machine state that comprises a process is its _memory_
 
 - Instructions lie in memory; the data that the running programs reads and writes sit in memory as well
 
@@ -72,4 +72,43 @@
 
 - Note that there some particularly special registers that form part of this machine state.
 
-- 
+- e.g., the **program counter(PC)** sometimes called the **instruction pointer** or **IP** tells us which instruction of the program is currently being executed; similarly a **stack pointer** and associated **frame pointer** are used to manage the stack for function parameters, local variables, and return addresses.
+
+- Finally, programs often access persistent storage devices too.
+
+- Such I/O _information_ might include a list of the files the process currently has open.
+
+## 4.2 Process API
+
+- Though we defer discussion of a real process API until a subsequent chapter, we first give some idea of what must be included in any interface of an operating system.
+
+- These APIs, in some form, are available on any modern operating system 
+
+1. **Create**
+   - An operating system must include some method to create new processes.
+
+   - When you type a command into the shell, or double-click on an application icon, the OS is invooked to create a new process to run a program you have indicated
+
+2. **Destroy**
+
+   - As there is an interface for process creation, systems also provide an interface to destroy processes forcefully.
+
+   - Many processes will run and just exit by themselves when complete
+
+   - When they don't, however, the user mau wish to kill them, and thus an interface to halt a runwaway process is quite useful
+
+3. **Wait**
+
+   - Sometimes it is useful to wait for a process to stop running; thus some kind of waiting interface is often provided
+
+4. **Miscellaneous Control**
+
+   - Other than killing or waiting for a process, there are sometimes other controls that are possible 
+
+   - e.g., most OS provide some kind of method to suspend a process (stop it from running for a while) and then resume it (continue it running)
+
+5. **Status**
+
+   - There are usually interfaces to get some status information about a process as well, such as how long it has run for, or what state it is in.
+
+![alt figure 4.1](/Figure-4-1.png)
