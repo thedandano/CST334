@@ -111,4 +111,4 @@
 
    - There are usually interfaces to get some status information about a process as well, such as how long it has run for, or what state it is in.
 
-![alt figure 4.1](/Figure-4-1.png)
+![alt figure 4.1](Figure-4-1.png)
