@@ -88,3 +88,22 @@
 
 ## 5.2 The `wait()` System Call
 
+- Sometimes it is useful for a parent to wait for a child process to finish what it has been doing 
+
+- This task is accoplished with the `wait()` system call (or its more complete sibling `waitpid()`) - See **Figure5.2**
+
+- In this example (`p2.c`) the parent process calls `wait()` to delay its execution until the child finishes executing
+
+- When the child is done, `wait()` returns to the parent
+
+- Adding a `wait()` call to the code above makes the output deterministic
+
+- If the parent runs first, it will immediately call `wait()`; this system call won't return until the child has run and exited
+
+- Even when the parent runs first, it waits for the child to finish running, then `wait()` returns, and then the parent prints its message 
+
+--
+
+## 5.3 Finally, The `exec()` System Call
+
+- 
