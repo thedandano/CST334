@@ -159,3 +159,52 @@
 
 ## 4.4 Process States
 
+- Now that we have some idea of what a process is (though we will continue to refine this notion), and roughly how it is created, let us talk about the different **states** a process ca be in at a given time
+
+- The notion that a process can be in one of these states arose in early computer systems
+
+- In a simplified view: a process can be in one of these 3 states
+
+1. **Running**
+
+   - In a running state, a process is running on a processor, meaning it is executing instructions 
+
+2. **Ready**
+
+   - In the ready state, a process is ready to run but for some reason the OS has chosen not to run it at this given moment
+
+3. **Blocked**
+
+   - In the blocked state, a process has performed some kind of operation that makes it not ready to run until some other event takes place
+
+   - A common example: when a process initiates an I/O request to a disk, it becomes blocked and thus some other process can use the processor
+
+![alt figure-4-2](figure-4-2.png)
+
+- If we were to map these states to a graph, we would arrive at the diagram above.
+
+- A process can be moved between the ready and running states at the discretion of the OS
+
+- Being moved from ready to running states means the process has been **scheduled**
+
+- Being moved from running to ready means the process has been **descheduled**
+
+- Once a process has become blocked (e.g., by initiating an I/O operation), the OS will keep it as such until some event occurs (e.g., I/O completion)
+
+- At this point, the process moves to the ready state again (and potentially) immediately to running again, if the OS so decides
+
+- Here is an example of how 2 processes might transition through some of these states.
+
+1. Imagine 2 processes running, each of which only use the CPY (they do no I/O)
+
+   - A trace of the state of each process might look like this figure
+
+   ![alt figure-4-3](figure-4-3.png)
+
+   - In this example, the first process issues an I/O after running for some time
+
+   - At that point, the processes is blocked, giving the other process a chance to run. Figure 4-4 shows a trace of this scenario
+
+   ![alt figure-4-4](figure-4-4.png)
+
+2. More specifically, process(0) initiaties an I/O and becomes blocked waitinf got it to complete; processes become blocked, for example, when reading from a disk or waiting for a packet from a network
