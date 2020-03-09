@@ -207,4 +207,25 @@
 
    ![alt figure-4-4](figure-4-4.png)
 
-2. More specifically, process(0) initiaties an I/O and becomes blocked waitinf got it to complete; processes become blocked, for example, when reading from a disk or waiting for a packet from a network
+2. More specifically, process(0) initiaties an I/O and becomes blocked waiting for it to complete; processes become blocked, for example, when reading from a disk or waiting for a packet from a network
+
+   - The OS recognizes Process(0) is not using the CPU and starts running Process(1)
+
+   - While Process(1) is running, the I/O completes, moving Process(0) back to _ready_
+
+   - Finally, Process(1) finishes, and Process(0) runs and then is done.
+
+3. Note that there are many decisions the OS must make, even in this simple example
+
+   - First, the system had to decide to run Process(1) while Process(0) issued an I/O
+
+   - Doing so improves resource utilization by keeping the CPU busy
+
+   - Second, the system decided not to switch back to Process(0) when its I/O completed; it is not clear if this is a good decision or not
+
+- These types of decisions are made by the OS **Scheduler**
+
+--
+
+## 4.5 Data Structures
+
