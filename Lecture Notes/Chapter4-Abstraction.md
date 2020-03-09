@@ -111,4 +111,51 @@
 
    - There are usually interfaces to get some status information about a process as well, such as how long it has run for, or what state it is in.
 
-![alt figure 4.1](Figure-4-1.png)
+![alt figure 4.1](Figure-4-1.png){#figure4-1}
+
+## 4.3 Process Creation: A little More Detail
+
+- One mystery that we should unmask a bit is how programs are transformed into processes. 
+
+- How does the OS get a program up and running? 
+
+- How does a process creation actually work?
+
+- The first thing an OS must do to run a program is to **load** its code and any static data (e.g., initialized variables) into memory, into the address space of the process
+
+- Programs initially reside on **disk** (or in some modern systems, **flash-based SSDs)** in some kind of **executable format** thus the process of loading a program and static data into memoery requires the OS to read those bytes from disk and place them in memory somewhere; such as Figure 4-1
+
+- In simple, early OS, the loading process is done **eagerly**, i.e., all at once before running the program; modern OSes perform the process **lazily**, i.e., by loading pieces of code or data only as they are needed during program execution
+
+- To truly understand how lazily loading of pieces of code and data works, you will have to understand more about the machinery of **paging** and **swapping**, topics we will cover in the future when we discuss the virtualization of memory
+
+- For now, just remember that before running anything, the OS clearly must do some work to get the important program bits from disk into memory
+
+1. Once the code and static data are loaded into memory, there are a few other things the OS needs to do before running the process
+
+   - Some memory must be allocated for the program's **run-time stack (or just stack)**
+
+   - C programs use the stack for local variables, function parameters, and return addresses; the OS allocates this memory and gives it to the process.
+
+   - The OS will also likely initialize the stack with arguments; specifically, it will fill in the parameters to the `main()` function, i.e., `argc` and the `argv` array
+
+2. The OS may also allocate some memory for the program's **heap**
+
+   - In C programs, the heap is used for explicitly requested dynamically-allocated data; programs reuest such space by calling `malloc()` and free it explicitly by calling `free()`
+
+   - The heap is needed for data structures such as linked lists, hash tables, trees, and other interesting data structures
+
+   - The heap will be small at first, as the program runs, and requests more memory via `malloc()` library API, the OS may get involved and allocate more memory to the process to help satisfy such calls. 
+
+3. The OS will also do some other initialization tasks, particularly as related to I/O
+
+   - e.g., in UNIX systems, each process by default has 2 open **file descriptors**, for std input, output, and error; these descriptors let programs easily read input from the terminal as well as print output to the screen
+
+   - This relates to **persistence** and will be covered later 
+
+4. By loading the code and static data into memory, by creating and initializing a stack, and by doing other work as realted to I/O setup, the OS has now FINALLY set the stage for program execution.
+
+   - It thus has one last task: to start the program running (through a specialized mechanism that we will discuss next chapter(, the OS transfers control of the CPU to the newly-created process, and thus the program begins to execute)
+
+## 4.4 Process States
+
