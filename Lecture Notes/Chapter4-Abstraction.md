@@ -248,3 +248,37 @@
 - When a process is stopped, its registers will be saved to this memory location; by restoring these registers (i.e., placing thier values back into the actual physical registers), the OS can resume running the process
 
 - **context switch** technique will be learned in later chapters.
+
+- You can also see from the figure that there are some other states a process can be in, beyond running, ready, and blocked. 
+
+- Sometimes a system willl have an **initial** state that the process is in when it is being created
+
+- Also, a process could be placed in a **final** state where it has exited but has not yet been cleaned up (in UNIX-based systems, this is call the **zombie** state)
+
+- This final state can be useful as it allows other processes (usually the **parent** that created the process) to examine the return code of the process and see if the just-finished process executed successfully (usually, a programs return zero in UNIX-based systems when they have accomplished a task susseccfully, and a non-zero otherwise)
+
+- When finished, the parent will make one final call (e.g., `wait()`) to wait for the completion of the child, and to also indicate to the OS that it can clean up any relevant data structures that referred to the now-extinct process
+
+-- 
+
+### Aside: Data Structures - The Process List
+
+- Operating systems are replete with various important **data structures** that we will discuss in these notes
+
+- The **process list** is the first such structure
+
+- It is one of the simpler ones, but certainly any OS that has the ability to run multiple programs at once will have something akin to this structure in order to keep track of all the running programs in the system
+
+- Sometimes people refer to the individual structure that stores information about a process as a **Process Control Block (PCB)**, a fancy way of talking about a C structure that contains information about each process
+
+--
+
+## Summary
+
+- We have intoduced the most basic abstraction of the OS: the process.
+
+- It is quite simply viewed as a running program 
+
+- With this conceptual view in mind, we will now move on to the nitty-gritty: the low-level mechanisms needed to implement processe, and the higher-level policies required to schedule them in an intelligent
+
+- By combining mechanisms and policies, we will build up our understanding of how an operating system virtualizes the CPU
