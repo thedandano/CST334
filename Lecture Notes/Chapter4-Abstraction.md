@@ -229,3 +229,22 @@
 
 ## 4.5 Data Structures
 
+- The OS is a program, and like any program it has some key DS that track various relevant pieces of information 
+
+- To track the state of each process, the OS likely will keep some kind of **process lis** for all processes that are ready, as well as some additional information to track which process is currently running
+
+- The OS must also track, in some way, blocked processes; when an I/O event completes, the PS shouls make sure to wake the correct process and ready it to run again
+
+- Figure 4-5 shos what type of information an OS needs to track about each process in the xv6 kernel
+
+![alt figure-4-5](figure-4-5.png)
+
+- Similar process structures exist in "real" OS such as Linux, Mac OS X, or Windows; look them up and see how much more complex they are
+
+- From the figure, you can see a couple of important pieces of information the OS tracks about the process
+
+- The **register context** will hold, for a stopped process, the contents of its registers
+
+- When a process is stopped, its registers will be saved to this memory location; by restoring these registers (i.e., placing thier values back into the actual physical registers), the OS can resume running the process
+
+- **context switch** technique will be learned in later chapters.
