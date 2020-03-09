@@ -106,4 +106,96 @@
 
 ## 5.3 Finally, The `exec()` System Call
 
-- 
+- A final and important piece of the process creation API is the `exec()` system call
+
+- This system call is useful when you want to run a program that is different from the calling program
+
+- For example, the calling `fork()` in `p2.c` is only useful if you want to keep running copies of the same program 
+
+- However, often you want to run _different_ programs; `exec()` does just that in **Figure 5.3**
+
+- In this example, the child process calls `execvp()` in order to run the program `wc`, which is the word counting program, which tells how many lines, words, and bytes are found in the file
+
+![alt figure-5-3](figure-5-3.png)
+
+![alt figure-5-3-1](figure-5-3-1.png)
+
+- The `fork()` system call is strange, its partner in crime, `exec()` is not so normal either 
+
+- What it does: given the name of an executable (e.g., `wc`), and some arguments (e.g., `p3.c`), it **loads** cone (and static data) from that executable and overwrites its current code segment (and current static data) with it 
+
+- The heap and stack and other parts of the memory space of the program are re-initialized
+
+- Then the OS simply runs that program, passing in any arguments as the `argv` of that process
+
+- Thus, it does _not_ create a new process; rather, it transforms the currently running program (formerly `p3`) into a different running program (`wc`)
+
+- After the `exec()` in the child, it is alsmot as if `p3.c` never ran; a successful call to `exec()` never returns
+
+--
+
+## 5.4 Why? Motivating The API
+
+- Why would we build such an odd interface to what shoul dbe the simple act of creating a new process?
+
+- The separation of `fork()` and `exec()` is essential in building a UNIX shell
+
+- The separation lets the shell run code _after_ the call to `fork()` but _before_ the call to `exec()`
+
+- This code can alter the environment of the about-to-be-run program
+
+-Thus, enabling a variety of interesting features to be readily built
+
+--
+
+### Tip: GETTING IT RIGHT (LAMPSON'S LAW)
+
+- As Lampson states in his well-regarded "Hints For Computer Systems Design" **Get it right**
+
+- Neither abstraction nor simplicity is a substitute for getting it right
+
+- Sometimes, you just have to do the right thin, and when you do, it is way better than the alternatives
+
+- There are lots of ways to design APIs for process creation; however the combination of `fork()` and `exec()` are simple and immensely powerful
+
+--
+
+- The shell is just a user program [^4]
+
+- The shell shows you a **prompt** and then waits for you to type something into it
+
+- You then type a command (i.e., the name of an executable program, plus any arguments) into it
+
+- In most cases, the shell then figures out where in the file system the executable resides
+
+- The shell then calls `fork()` to careate a new child process to run the command
+
+- The shell then calls some variant of `exec()` to run the command, then waits for the commant to complete by calling `wait()`
+
+- When the child completes, the shell returns from `wait()` and prints out a prompt again, ready for your next command
+
+- The separation of `fork()` and `exec()` allos the shell to do a while bunch of useful things rather easily.
+
+- For example, `prompt> wc p3.c > newfile.txt`
+
+- In the above example, the output of the program `wc` is **redirected** into the output file `newfile.txt` (the greate-than sign is how the redirection is indicated)
+
+- The way the shell accomplishes this task is quote simple: when the child is created, before calling `exec()` the shell closes **standard output** and opens the file `newfiles.txt`
+
+- By doing so, any output from the soon-to-be-running program `wc` are sent to the file instead of the screen
+
+- **Figure 5.4** shows a program that does exactly this
+
+![alt figure-5-4](figure-5-4.png)
+
+- The reason this redirection works is due to an assumption about how the operating sysstem manages file descriptors
+
+- UNIX systems start looking for free file descriptors at zero
+
+- In this case, STDOUT_FILENO will be the first available one and thus gets assigned when `open()` is called 
+
+- Subsequent writes by the child process to the standward output file descriptor, for example by routines such as `printf()`, will then be routed transparently to the newly-opened file instead of the screen.
+
+![alt figure-5-4-1](figure-5-4-1.png)
+
+[^4]: And there are lots of shells; tcsh, bash, and zsh to name a few. You should pick one, read its man pages, and learn more about it; all UNIX experts do.
