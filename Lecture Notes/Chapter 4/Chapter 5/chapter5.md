@@ -198,4 +198,88 @@
 
 ![alt figure-5-4-1](figure-5-4-1.png)
 
+- You will notive at least 2 intersting tidbite about thus output
+
+1. First, when `p4` is run, it looks as if nothing has happened
+
+   - The shell just prints the command promot and is immediately ready for your next command
+
+   - However, that is not the case 
+
+   - The program `p4` did indeed call `fork()` to create a new child, and then run the `wc` program via call to `execvp()`
+
+   - You don't see any putput printed to the screen because it has been redirected to the file `p4.output`
+
+2. Second, you can see that when we `cat` the output file, all the expected output from running `wc` is found
+
+- UNIX pipes are implemented in a similar way, but with the `pipe()` system call
+
+- In this case, the output of another process is connceted to an in-kernel **pipe** (i.e., queue), and the input of another process is conneceted to that same pipe
+
+- Thus, the output of one process seamlessly is used as input to the next
+
+- Long, useful chains of commands can be strung together
+
+- As a simpl example, consider looking for a word in a file, and then counting how many times said word occurs
+
+- With pipes and the utilities `grep` and `wc`, it is easy
+
+- Just type `grep -o fool file | wc -l` into the command prompt and marvel at the result
+
+- Finally, while we just have sketched out the process API at a high level, there is a lot more detail about these calls out there to be learned and digested
+
+- We will learn more, e.g., file descriptors, when we tal about the file systems in the third part of the book 
+
+- For now, suffice it to say that the `fork()` / `exec()` combo is powerful enough to create and manipulate processes
+
+--
+
+### ASIDE: RTFM - Read the fucking man, bro
+
+- Man pages are the original form of doc that exist on UNIX systems
+
+- They were created before the web
+
+- Read the man pages for whichever shell you are using (e.g., **tcsh**, **bash**)
+
+- And certainyl for any system calls your program makes (in order to see what return values and error conditions exist)
+
+- Finally, reading the man pages can save you some embarrassment.  Just reading the fucking manual bro
+
+--
+
+## 5.5 Other Parts of the API
+
+- Beyond `fork()`, `exec()`, and `wait()`, there are a lot of other interfaces for interacting with processes in UNIX
+
+- For example, the `kill()` system call is used to send **signals** to a process, includingi directives to go to sleep, die, and other useful imperatives
+
+- In fact, the entires signals subsystem provides a rich infrastructure to deliver external events to processes, including ways to receive and process those signals 
+
+- There are many command line tools that are useful as well
+
+- e.g., using `ps` comman allows you to see which processes are running
+
+- Read the **man pages** for some useful flags to pass to `ps`
+
+- The tool `top` is also quite useful, as it displays the processes of the system and how much CPU and other resources they are eating up
+
+- Humorously, may times when you run it, `top` claims it is the top resource hog - it is being a little egomaniac
+
+- Finally, there are many different kinds of CPU meters you can use to get a quick glance understanding of the load on your system
+
+- e.g., we always keep **MenuMeters** (from Raging Menace software) running on our MAC toolbars, se we can see how much CPU is being utilized at any moment in time 
+
+- In general, the more information about what is going on, the better.
+
+## Summary 
+
+- We have introduced some of the APIs dealing with UNIX process creation:
+
+- `fork()`, `exec()`, and `wait()`
+
+- However, we have just skimmed the surface 
+
+- For more detail, read Stevens and Rago, Process Control, Process Relationships, and Signals
+
 [^4]: And there are lots of shells; tcsh, bash, and zsh to name a few. You should pick one, read its man pages, and learn more about it; all UNIX experts do.
