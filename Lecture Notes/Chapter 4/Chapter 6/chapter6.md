@@ -188,10 +188,148 @@
 
 - Once the hardware is informed, it remembers the location of these handlers until the machine is next rebooted, and thus the hardware knows what to do (what code to jump to) when system calls and other exceptional events take place.
 
-![alt figure-6-2](figure-6-2.png)
-
 - To specify the exact system call, a **system-call number** is usually assigned to each system call
 
 - The user code is thus responsible for placing the desired system-call number in a register or at a specified location on the stack
 
-- The OS, when handling the system call inside the trap handler,
+- The OS, when handling the system call inside the trap handler, examines this number, ensures it is valid, and, if so, executes the code
+
+- This level of indirectino serves as a form of **protection**
+
+- User code cannot specify an exact address to jump to, but rather must request a particular service via number 
+
+- Being able to execute the instruction to tell the hardware where the trap tables are is a powerful capability
+
+- Thus, it is also a **priviledged** operation
+
+- If you try to execute this instruction in user mode, the hardware won't let you, and you can probably guess what will happen..adios!
+
+- What horrible things could you do to a system if you could install your own trap table?  Could you take over the machine?
+
+- The timeline (with time increasing downward, in figure 6-2) sums up the protocol.
+
+![alt figure-6-2](figure-6-2.png)
+
+- We assume each process has a kernel stack where registers (including general purpose registers and the program counter) are saved to and restored from (by the hardware) when transitioning into and out of the kernel
+
+- There are teo phases in the LDE protocol
+
+1. Boot Time: the kernel initializes the trap table, and the CPU remembers its location for subsequent use
+
+   - The kernel does so via a privileged instruction (all privileged instructions are highlighted in bold)
+
+2. When running a process: the kernel sets up a few things (e.g., allocating a node on the process list, allocating memory) before using a return-from-trap instruction to start the execution of the process
+
+- This switches the CPU to user mode and begins running the process
+
+- When the process wishes to issue a system call, it traps back into the OS, which handles it and once again returns control via a return-from-trap to the process
+
+- The process then completes its work and returns from `main()`; this usually will return into some stub code which will properly exit the program (say, by calling `exit()` system call, which traps into the OS)
+
+- At this point, the OS cleans up and we are done
+
+## 6.3 Problem #2: Switching Between Processes
+
+- The next problem with direct execution is achieving a switch between processes
+
+- Switching between processes should be simple, right?
+
+- The OS should just decide to stop one process and start another
+
+- It gets tricky when a process is running on the CPU: by definition this means the OS is _not running_
+
+- If the OS is not running, how can it do anything at all? It can't!
+
+### HOW TO REGAIN CONTROL OF THE CPU SO THAT IT CAN SWITCH BETWEEN PROCESSES?
+
+### A cooperative Approach: wait for system calls
+
+- One approach that some systems have taken in the past is known as the **cooperative** approach
+
+- In this style, the OS trusts the processes of the system to behave reasonably
+
+- Processes that run for too long are assumed to periodically give up the CPU so that the OS can decide to run some other task.
+
+- How does a friendly process give up the CPU in this utopian world?
+
+- Most processes as it turns out transfer control of the CPU to the OS quite frequently by making **system calls** e.g., to open a file, to read a file, to send a message to another machine, or to create a new process
+
+- Systems like this often include an explicit **yield** system call, which does nothing except to transfer control to the OS so it can run other processes 
+
+- Applications also transfer control to the OS when they do something illegal
+
+- For example, if an application divides by zero, or tries to access memory that it shouldn't be able to access, it will generate a **trap** to the OS
+
+- The OS will then have control of the CPU again (and likely terminate the offending process)
+
+- Thus, in a cooperative scheduling system, the OS regains control of the CPU by waiting for a system call or an illegal operation of some kind to take place
+
+- You might also be thinking: isn't this passive approach less thn ideal?
+
+- What happens is a process ends up being an infinite loop, and never makes a system call?
+
+### A non-cooperative approach: the os takes control
+
+- Without some additional help from the hardware, it turns out the OS can't do much at all when a process refuses to make system calls (or mistakes) and thus return control to the OS
+
+- In fact, in the sooperative approach, your only recourse when a process gets stuck in an infinite loop, is to resort to rebooting
+
+- How to gain control without cooperation?
+
+- A **TIP** is to use the **timer interrupt** ... it gives the OS ability to run again on a CPU even if processes act in a non-copperative fashion
+
+- Thus this hardware feature is essential in helping the OS maintain control of the machine
+
+- The answer turns out to be simple and was discovered by a number of people building computer systems many years ago:
+
+- a **timer interrupt**: a timer device can be programmed to raise an interrupt every so many ms
+
+- When the interrupt is raised, the currently running process is halted, and a pre-configured **interrup handler** in the OS runs 
+
+- At this point, the OS has regained control of the CPU and thus can do what is pleases 
+
+- Stop the current process and start a different one 
+
+- The OS must inform the hardware of which code to run when the timer interrupt occurs
+
+- Thus, at boot time, the OS does exactly that. 
+
+- Second, also during bott sequence, the OS must start a timer - which is a priviledged operation 
+
+- Once the timer begins the OS can feel safe in that control will eventually be returned to it 
+
+- The OS is free to run user programs 
+
+- The timer can also be turned off (privi Op) something we will discuss in concurrency
+
+- The hardware has some responsibility when an interrupt occurs, in particular to save enough of the state of the program that was running when the interrupt occurred such that a subsequent return-from-trap instruction will be able to resume the runnign program correctly
+
+- This set of actions is quote similar to the behavior of the hardware during an explicit system-call trap into the kernel, with various registers this getting saved (e.g., onto a kernel stack)
+
+- And thus easily restored by the return-from-trap instruction
+
+## Saving and Restoring Context
+
+- Now that the OS has regained control, whether by force or cooperation, a decision has to be made
+
+- Whether to continue running the currently-running process or switch to a different one
+
+- This decision is made by part of the OS known as the **scheduler**
+
+- If the decision is made to dwitch, the OS then executes a low-level piece of code which re refer to as a **context switch**
+
+A context-switch is conceptually simple: all the OS has to do is save a few register values for the currently-executing process (onto its kernel stack, for example)
+
+- And restore a few for the soon-to-be-executing process (from its kernel stack)
+
+- By doing so, the OS thus ensures that when the return-from-trap instructino is finally exexuted, instead of returning to the process that was running,, the system resumes execution of another process 
+
+- To save the context of the currently-running process, the OS will execute some low-level assembly xode to save the general purpose registers, PC, as well as the kernel stack pointer of the currently-running process, and then restore said registers, PC, and switch to the kernel stack to the soon-to-be executing process
+
+- By switching stacks, the kernel enters the call to the switch code in the context of one process (the one that was interrupted) and returns in the context of another (coming soon one)
+
+- When the OS finally executes a return-from-trap instructin, the soon to be executing process becomes the currently-running process
+
+- Thus the context switch is complete 
+
+- 
