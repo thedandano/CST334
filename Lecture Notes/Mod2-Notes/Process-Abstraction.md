@@ -48,3 +48,32 @@
 
 - The babysitting aren is known as a **process context**
 
+---
+
+## The Process Environment
+
+- The OS ensures no conflict among processes in main memory
+
+- Bro, so like, is main memory the arena???
+
+- OS keeps processes from seeing each other and from seeing the OS....wtf!
+
+- Them processes are in prison! High risk isolation prison!
+
+- Putting a process in prison is done by running its machine code in user mode
+
+- User mode is prison mode
+
+- In prison mode, some machine instructions are cut off, memory areas not owned by a process are restricted, access to all hardware is denied by the CPU
+
+---
+
+## System Calls
+
+- So how does a process get that solid from the OS (i.e., use its services like read froma file and move the mouse)
+
+- The process gets its solid with the **TRAP** instruction
+
+- The trap instruction pushes the job from the prisoner to the OS
+
+- 
