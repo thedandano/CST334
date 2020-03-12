@@ -210,6 +210,35 @@ FIFO has its limitations when one job, suppose A, runs for 100 seconds and queue
 
 - RR is stretching out each job as long as it can, by only running each job for a short bit before moving to the next
 
-- RR is fair, however a **trade-off** is required 
+- RR is fair, however a **trade-off** is required
 
-- 
+- RR evenly divides the CPU among active processes on a small time scale, will perform poorly on metrics such as turnaround time
+
+- We have discussed two types of schedulers: SJF and STCF
+
+- Optimizes turnaround but is bad for resposne time 
+
+- RR optimizes response time but is bad for turnaround 
+
+--
+
+### TIP: OVERLAP ENABLES HIGHER UTILIZATION
+
+- When posible, **overlap** operations to maximize the utilization of systems
+
+- Overlap is useful in many different domains, including when performing disk I/O or sending messages to remore machines
+
+- In either case, starting the operation and then switching to other work is a good idea, and imporves the overall utilization and efficieny of the system
+
+## 7.8 INCORPORATING I/O
+
+- A scheduler has a decision to make when a job initiates an I/O request, because the currently-running job won't be using the CPU during the I/O; it is **blocked** waiting for I/0 completion
+
+- The scheduler also has to make a decision when the I/O completes
+
+- When that occurs, an interrupt is raised, and the OS runs and moves the process that issues the I/O from blocked back to the ready state
+
+- A scheduler incorporates I/O using **overlap** by treating each CPU burst as a job, the scheduler makes sure processes that are "interactive" get run frequently
+
+- Those interactive jobs performing I/O, other CPU-intensive jobs run, thus better utilization of the processor
+
