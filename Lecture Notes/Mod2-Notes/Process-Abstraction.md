@@ -76,4 +76,12 @@
 
 - The trap instruction pushes the job from the prisoner to the OS
 
-\forall x \in X, \quad \exists y \leq \epsilon
+- The process places instructions in the CPU, and tells the OS what is wants
+
+- This procedure of gaining services from the OS is called a **system call**
+
+- Each OS has it's own set of **system calls** and the set of these calls is known as the OSes API
+
+---
+
+## Layout of a Process
