@@ -76,4 +76,4 @@
 
 - The trap instruction pushes the job from the prisoner to the OS
 
-- 
+\forall x \in X, \quad \exists y \leq \epsilon
