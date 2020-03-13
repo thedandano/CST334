@@ -11,7 +11,7 @@ main(int argc, char *argv[])
       fprintf(stderr, "usage: cpu <string>\n");
       exit(1);
    }
-   char *str = argv[1];
+   char *str = argv[0];
    
    while (1) {
       Spin(1); 

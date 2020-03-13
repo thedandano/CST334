@@ -104,12 +104,28 @@
 
 - The prisoner is either running or waiting for a drug deal(I/O), or in line to shoot his horse (polling); which is wasteful for the CPU resources
 
-- A **batch** system may have many process ( known as jobs) loaded into main memory. Think prison ward.
+- A **batch** system may have many process (known as jobs) loaded into main memory. Think many prisoners.
 
-- Although there are many guards in the yard, only one is selected at any time
+- Although there are many prisoners in the yard, only one is selected at any time
 
-- Once that guard does what he does in the yard, (job runs to completion) before the next guard can step in
+- Once that prisoner does what he does in the yard, (job runs to completion) before the next prisoner can step in
 
 - Polling, or waiting in line to get a slap of some horse, is used by the OS to detect the completion of the drug deal (I/O)
 
-- It is important to note that drug dealing devices like disks, tape drives, modems, network cards, keyboards, etc. are at least 1000 times slower than main memory.
+- It is important to note that drug dealing devices like disks, tape drives, modems, network cards, keyboards, etc. are at least 1000 times slower than main memory and 1,000,000 times slower than the CPU (front desk of prison)
+
+- While the system is polling a device for the completion of in or output, the CPU is doing no useful work
+
+- To reduce the waste of the front desk's time by having a druggie wait in line for his slap, on some batch systems, the prisoners **run to block**
+
+- Instead of waiting for a drug deal (I/O), the OS blocks the prisoner (puts it to sleep), selecting another prisoner to do his thing
+
+- When a drug deal is done, the OS finds the sleeping prisoner who requested a drug deal, and unblocks it into ready state, as the prisoner can now execute more instructions
+
+- An **interrupt** from the hardware (drug dealer) tells the OS that the drug deal is done
+
+- There can be more than one prisoner in ready state, and more tha one prisoner in blocked state 
+
+- Since we are considering only one CPU, there can only be one prisoner in running state (in the yard)
+
+- **Run to block** is not suitable
