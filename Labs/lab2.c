@@ -12,13 +12,15 @@
 #include <errno.h>         // errno
 
 // main function with command-line args passed
-int
-main(int argc, char*argv[]){
+int main(int argc, char*argv[]){
    pid_t pid;
    int i; 
    int n = atoi(argv[1]); // number of milliseconds(n) keyboard delay
    printf("\n Before forking \n");
    pid = fork();
+   if(pid == -1){
+      printf("can't fork, error %d\n", errno);
+   }
 
    if(pid){
       //Parent Process
