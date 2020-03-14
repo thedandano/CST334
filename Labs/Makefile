@@ -16,6 +16,6 @@ fork.o: unistd.h
 atoi.o: stdlib.h
 errno.o: errno.h
 
-# force clean directory
+# clean directory
 clean:
 	rm -f *.o
