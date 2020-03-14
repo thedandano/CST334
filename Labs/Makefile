@@ -1,8 +1,5 @@
 # -*- Makefile -*-
 
-# target: dependencies
-	# actions
-
 # suffix rule
 .c.o: 
 	gcc -c $*.c
@@ -19,5 +16,6 @@ fork.o: unistd.h
 atoi.o: stdlib.h
 errno.o: errno.h
 
+# force clean directory
 clean:
 	rm -f *.o
