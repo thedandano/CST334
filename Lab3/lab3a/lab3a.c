@@ -8,7 +8,7 @@
 //main
 int
 main() {
-   int fds[2];  //
+   int fds[2];  // 
    pipe(fds);   //
    //Child 1 duplicates downstream into stdin
    if(fork() == 0){

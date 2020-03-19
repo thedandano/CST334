@@ -14,6 +14,8 @@ main(int argc, char *argv[]){
    int count;
    int i;
    pipe(fds);
+   //child process created that closes upstream and opens downstream
+   //duplicating downstream to stdin
    if(fork() == 0){
       printf("\nWriter on the upstream end of the pipe -> %d arguments \n", argc);
       close(fds[0]);
@@ -22,6 +24,8 @@ main(int argc, char *argv[]){
       }
       exit(0);
    }
+   //child process created that opens upstream and closes downstream
+   //duplicating upstream to stdout
    else if(fork() == 0){
       printf("\nReader on the downstream end of the pipe \n");
       close(fds[1]);
@@ -34,7 +38,7 @@ main(int argc, char *argv[]){
       }
       exit(0);
    }
-   else {
+   else { //parent closes both ends and waits for children
       close (fds[0]);
       close(fds[1]);
       wait(0);
