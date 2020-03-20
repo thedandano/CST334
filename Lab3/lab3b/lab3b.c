@@ -1,10 +1,21 @@
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
+/********************************************************************************
+ * @author Ricardo Barbosa 
+ * @version March 19, 2020
+ * @Title Lab 3 Part 2
+ * Lab3b: The use of pipes was implemented to show when the forked call
+ * would implement write, and when it would implement read.  The write was performed
+ * during upstream and the read was performed during downstream.
+ * 
+ ***********************************************************************************/
+
+
+#include <sys/types.h>  // Library for IPC, pipe
+#include <sys/ipc.h>    // Library for IPC, pipe
+#include <stdio.h>      // stdin, stdout
+#include <unistd.h>     // open, fork, execlp, dup2
+#include <stdlib.h>     // exit
+#include <sys/wait.h>   // wait
+#include <string.h>     // write
 
 //main
 int

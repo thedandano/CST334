@@ -1,19 +1,18 @@
 /********************************************************************************
  * @author Ricardo Barbosa 
  * @version March 19, 2020
+ * @Title: Lab 3 Part 3
+ * Lab3c: The use of pipes was used to implement a Unix command into C; 
+ * specifically cat /etc/passwd | grep root
  * 
- * Lab3c: 
- * 
- * 
- */
+ ********************************************************************************/
 
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
+#include <sys/types.h>  // Library for IPC, pipe
+#include <sys/ipc.h>    // Library for IPC, pipe
+#include <stdio.h>      // stdin, stdout
+#include <unistd.h>     // open, fork, execlp, dup2
+#include <stdlib.h>     // exit
+#include <sys/wait.h>   // wait
 
 //main
 int

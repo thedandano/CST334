@@ -1,9 +1,18 @@
-#include <sys/types.h>  // Library for IPC
-#include <sys/ipc.h>    //Library for IPC
-#include <stdio.h>      // 
+/********************************************************************************
+ * @author Ricardo Barbosa 
+ * @version March 19, 2020
+ * @Title: Lab 3 Part 3
+ * Lab3c: The use of fork pipes was used to implement a Unix command into C; 
+ * specifically the ls | more command.
+ * 
+ ********************************************************************************/
+
+#include <sys/types.h>  // Library for IPC, pipe
+#include <sys/ipc.h>    // Library for IPC, pipe
+#include <stdio.h>      // stdin, stdout
 #include <unistd.h>     // open, fork, execlp, dup2
-#include <stdlib.h>     //
-#include <sys/wait.h>   //
+#include <stdlib.h>     // exit
+#include <sys/wait.h>   // wait
 
 //main
 int
