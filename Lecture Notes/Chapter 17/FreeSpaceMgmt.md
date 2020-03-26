@@ -170,4 +170,32 @@ head->next = NULL;
 
 ### Worst Fit
 
-- 
+- Finds the largest chunk and returns the requested amount keeping the remaining large chunk on the free list 
+
+- Tries to leave big chunks free
+
+- A search of the free list is required
+
+- leads to excess frag while having high overheads
+
+### First Fit
+
+- Finds the first block that is big enough and returns what the client asks for
+
+- The remaining chunk is left for more requests
+
+- Advantage is speed, no deep search of free spaces needed
+
+- Disadvantage: creates many small objects on the beginning of free list
+
+- allocation order matters
+
+- address:based ordering: by keeping list ordered by address of free space, merging the chunks becomes easier and fragmentation is reduced
+
+### Next Fit
+
+- Keeps an extra pointer where it was last looking in the list
+
+- splintering?
+
+- similar to first fit: no deep search needed
