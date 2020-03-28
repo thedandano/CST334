@@ -5,18 +5,13 @@
 #include "queue.h"
 #include "node.h"
 
-
-typedef struct {
-    int pageno;
-} ref_page;
-
 int main(int argc, char *argv[]){
 	int CACHE_SIZE = atoi(argv[1]); // Size of Cache passed by user 
     char pageCache[100]; // Cache that holds the input from test file
     int page_in_file = 0; // pages in the accesses.txt file
     int page_fault = 0; // page page_faults accrued
     int page_num = 0; // the page number in accesses.txt file
-    int node_total = 0; // the node total in the queue
+    int node_total = 0; // the node total in the queue(cache counter)
     struct queue* q = queue_create(); // empty queue
     struct node* temp = NULL;
 
@@ -24,7 +19,7 @@ int main(int argc, char *argv[]){
     while (fgets(pageCache, 100, stdin)){
     	page_num = atoi(pageCache); // Stores number read from file as an int
 
-         if(node_total < CACHE_SIZE)
+         if(node_total < CACHE_SIZE) //cache counter less than cache size: if there is room
          {
             enqueue(q, page_num);
             node_total = queue_length(q);
@@ -32,11 +27,11 @@ int main(int argc, char *argv[]){
          }
          else{
             temp = NULL;
-            temp = queue_find(q, page_num);
+            temp = queue_find(q, page_num); // if there is no room it will find a node to dequeue
             if(temp == NULL)
             {
-               dequeue(q);
-               enqueue(q, page_num);
+               dequeue(q); //remove the found node
+               enqueue(q, page_num); //insert the node trying to put in
                page_fault++;
             }
          }
